@@ -1,0 +1,6 @@
+version: '3.9'
+services:
+  mail:
+    image: docker.io/greenmail/standalone:2.0.0
+    ports:
+      - '13025:3025'

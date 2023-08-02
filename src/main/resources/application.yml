@@ -1,0 +1,2 @@
+smtp:
+  host: "${SMTP_HOST:localhost:13025}"
