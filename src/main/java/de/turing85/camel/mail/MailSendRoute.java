@@ -2,11 +2,10 @@ package de.turing85.camel.mail;
 
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.platformHttp;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.mail.internet.AddressException;
 import org.apache.camel.builder.RouteBuilder;
 
-@ApplicationScoped
+@SuppressWarnings("unused")
 public class MailSendRoute extends RouteBuilder {
   @Override
   public void configure() {
@@ -17,8 +16,7 @@ public class MailSendRoute extends RouteBuilder {
     from(
         platformHttp("/send")
             .httpMethodRestrict("POST"))
-        .setProperty("receiver", body())
-        .setHeader("to", simple("${exchangeProperty.receiver}"))
+        .setHeader("to", body())
         .log("Sending mail to ${header.to}")
         .setHeader("subject", constant("important"))
         .setHeader("from", constant("foo@bar.baz"))
