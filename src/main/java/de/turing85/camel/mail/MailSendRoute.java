@@ -2,7 +2,7 @@ package de.turing85.camel.mail;
 
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.platformHttp;
 
-import javax.mail.internet.AddressException;
+import jakarta.mail.internet.AddressException;
 import org.apache.camel.builder.RouteBuilder;
 
 @SuppressWarnings("unused")

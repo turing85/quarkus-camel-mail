@@ -8,4 +8,3 @@ package de.turing85.camel.mail;
 @SuppressWarnings("unused")
 public class ReflectionConfiguration {
 }
-

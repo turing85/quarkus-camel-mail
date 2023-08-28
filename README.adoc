@@ -60,7 +60,7 @@ __  ____  __  _____   ___  __ ____  ______
 --\___\_\____/_/ |_/_/|_/_/|_|\____/___/
 2023-08-02 16:04:18,012 INFO  [org.apa.cam.qua.cor.CamelBootstrapRecorder] (main) Bootstrap runtime: org.apache.camel.quarkus.main.CamelMainRuntime
 2023-08-02 16:04:18,014 INFO  [org.apa.cam.mai.MainSupport] (main) Apache Camel (Main) 3.20.1 is starting
-2023-08-02 16:04:18,028 ERROR [org.apa.cam.qua.mai.CamelMainRuntime] (main) Failed to start application: org.apache.camel.FailedToCreateRouteException: Failed to create route route1 at: >>> SetProperty[receiver, simple{${body}}] <<< in route: Route(route1)[From[platform-http:///send?httpMethodRestrict=... because of java.lang.ClassNotFoundException: javax.mail.internet.AddressException
+2023-08-02 16:04:18,028 ERROR [org.apa.cam.qua.mai.CamelMainRuntime] (main) Failed to start application: org.apache.camel.FailedToCreateRouteException: Failed to create route route1 at: >>> SetProperty[receiver, simple{${body}}] <<< in route: Route(route1)[From[platform-http:///send?httpMethodRestrict=... because of java.lang.ClassNotFoundException: jakarta.mail.internet.AddressException
 	at org.apache.camel.reifier.RouteReifier.doCreateRoute(RouteReifier.java:215)
 	at org.apache.camel.reifier.RouteReifier.createRoute(RouteReifier.java:75)
 	at org.apache.camel.impl.DefaultModelReifierFactory.createRoute(DefaultModelReifierFactory.java:49)
@@ -87,7 +87,7 @@ __  ____  __  _____   ___  __ ____  ______
 	at io.quarkus.runtime.Quarkus.run(Quarkus.java:44)
 	at io.quarkus.runtime.Quarkus.run(Quarkus.java:124)
 	at io.quarkus.runner.GeneratedMain.main(Unknown Source)
-Caused by: org.apache.camel.RuntimeCamelException: java.lang.ClassNotFoundException: javax.mail.internet.AddressException
+Caused by: org.apache.camel.RuntimeCamelException: java.lang.ClassNotFoundException: jakarta.mail.internet.AddressException
 	at org.apache.camel.reifier.errorhandler.ErrorHandlerReifier.createExceptionClasses(ErrorHandlerReifier.java:322)
 	at org.apache.camel.reifier.errorhandler.ErrorHandlerReifier.addExceptionPolicy(ErrorHandlerReifier.java:299)
 	at org.apache.camel.reifier.errorhandler.ErrorHandlerReifier.configure(ErrorHandlerReifier.java:342)
@@ -104,12 +104,12 @@ Caused by: org.apache.camel.RuntimeCamelException: java.lang.ClassNotFoundExcept
 	at org.apache.camel.reifier.ProcessorReifier.addRoutes(ProcessorReifier.java:598)
 	at org.apache.camel.reifier.RouteReifier.doCreateRoute(RouteReifier.java:211)
 	... 25 more
-Caused by: java.lang.ClassNotFoundException: javax.mail.internet.AddressException
+Caused by: java.lang.ClassNotFoundException: jakarta.mail.internet.AddressException
 	at org.apache.camel.quarkus.core.CamelQuarkusClassResolver.resolveMandatoryClass(CamelQuarkusClassResolver.java:93)
 	at org.apache.camel.reifier.errorhandler.ErrorHandlerReifier.createExceptionClasses(ErrorHandlerReifier.java:319)
 	... 39 more
 
-2023-08-02 16:04:18,029 ERROR [io.qua.run.Application] (main) Failed to start application (with profile [prod]): java.lang.ClassNotFoundException: javax.mail.internet.AddressException
+2023-08-02 16:04:18,029 ERROR [io.qua.run.Application] (main) Failed to start application (with profile [prod]): java.lang.ClassNotFoundException: jakarta.mail.internet.AddressException
 	at org.apache.camel.quarkus.core.CamelQuarkusClassResolver.resolveMandatoryClass(CamelQuarkusClassResolver.java:93)
 	at org.apache.camel.reifier.errorhandler.ErrorHandlerReifier.createExceptionClasses(ErrorHandlerReifier.java:319)
 	at org.apache.camel.reifier.errorhandler.ErrorHandlerReifier.addExceptionPolicy(ErrorHandlerReifier.java:299)
