@@ -16,12 +16,12 @@ public class MailSendRoute extends RouteBuilder {
     from(
         platformHttp("/send")
             .httpMethodRestrict("POST"))
-        .setHeader("to", body())
+        .setHeader("to", bodyAs(String.class))
         .log("Sending mail to ${header.to}")
         .setHeader("subject", constant("important"))
         .setHeader("from", constant("foo@bar.baz"))
         .setBody(constant("Hello"))
         .to("smtp://{{smtp.host}}")
-        .log("Mail sent");
+        .log("Mail sent to ${header.to}");
   }
 }
