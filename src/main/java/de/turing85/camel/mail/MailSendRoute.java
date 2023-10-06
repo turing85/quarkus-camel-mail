@@ -2,6 +2,7 @@ package de.turing85.camel.mail;
 
 import jakarta.mail.internet.AddressException;
 
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.platformHttp;
@@ -12,7 +13,7 @@ public class MailSendRoute extends RouteBuilder {
   public void configure() {
     // @formatter:off
     onException(AddressException.class)
-        .log("Ouchie: ${exception}")
+        .log(LoggingLevel.ERROR, "Ouchie: ${exception}")
         .handled(false);
 
     from(

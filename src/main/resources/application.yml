@@ -1,2 +1,7 @@
 smtp:
   host: ${SMTP_HOST}
+'%test':
+  quarkus:
+    log:
+      console:
+        json: false
