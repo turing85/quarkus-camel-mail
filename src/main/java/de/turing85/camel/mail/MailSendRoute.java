@@ -19,6 +19,7 @@ public class MailSendRoute extends RouteBuilder {
     from(
         platformHttp("/send")
             .httpMethodRestrict("POST"))
+        .id("http-to-mail")
         .setHeader("to", bodyAs(String.class))
         .log("Sending mail to ${header.to}")
         .setHeader("subject", constant("important"))

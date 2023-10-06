@@ -1,5 +1,12 @@
 smtp:
   host: ${SMTP_HOST}
+'%dev':
+  quarkus:
+    log:
+      console:
+        json: false
+  smtp:
+    host: localhost:13025
 '%test':
   quarkus:
     log:
