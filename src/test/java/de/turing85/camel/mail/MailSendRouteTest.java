@@ -26,15 +26,16 @@ class MailSendRouteTest {
 
   @Test
   void testSendMail() throws MessagingException, IOException {
+    String expectedRecipient = "foo@bar.baz";
     // @formatter:off
-      String expectedRecipient = "foo@bar.baz";given()
-        .contentType(ContentType.TEXT)
-        .body(expectedRecipient)
-        .when()
-          .post("/send")
-        .then()
-          .statusCode(is(HttpResponseStatus.OK.code()))
-          .body(is("Hello"));
+    given()
+      .contentType(ContentType.TEXT)
+      .body(expectedRecipient)
+      .when()
+        .post("/send")
+      .then()
+        .statusCode(is(HttpResponseStatus.OK.code()))
+        .body(is("Hello"));
     // @formatter:on
     List<MimeMessage> messages = List.of(GREEN_MAIL.getReceivedMessages());
     assertThat(messages).hasSize(1);
@@ -57,5 +58,8 @@ class MailSendRouteTest {
         .then()
           .statusCode(is(HttpResponseStatus.INTERNAL_SERVER_ERROR.code()));
     // @formatter:on
+
+    List<MimeMessage> messages = List.of(GREEN_MAIL.getReceivedMessages());
+    assertThat(messages).hasSize(0);
   }
 }
