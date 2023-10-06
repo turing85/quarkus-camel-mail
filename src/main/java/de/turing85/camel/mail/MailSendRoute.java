@@ -1,14 +1,16 @@
 package de.turing85.camel.mail;
 
-import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.platformHttp;
-
 import jakarta.mail.internet.AddressException;
+
 import org.apache.camel.builder.RouteBuilder;
+
+import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.platformHttp;
 
 @SuppressWarnings("unused")
 public class MailSendRoute extends RouteBuilder {
   @Override
   public void configure() {
+    // @formatter:off
     onException(AddressException.class)
         .log("Ouchie: ${exception}")
         .handled(false);
@@ -23,5 +25,6 @@ public class MailSendRoute extends RouteBuilder {
         .setBody(constant("Hello"))
         .to("smtp://{{smtp.host}}")
         .log("Mail sent to ${header.to}");
+    // @formatter:on
   }
 }

@@ -1,10 +1,10 @@
 package de.turing85.camel.mail.resource;
 
+import java.util.Map;
+
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
-
-import java.util.Map;
 
 public class GreenMailTestResource implements QuarkusTestResourceLifecycleManager {
   private final GreenMail greenMail = new GreenMail(ServerSetupTest.SMTP);
@@ -17,8 +17,7 @@ public class GreenMailTestResource implements QuarkusTestResourceLifecycleManage
 
   @Override
   public void inject(TestInjector testInjector) {
-    testInjector.injectIntoFields(
-        greenMail,
+    testInjector.injectIntoFields(greenMail,
         new TestInjector.AnnotatedAndMatchesType(InjectGreenMail.class, GreenMail.class));
   }
 

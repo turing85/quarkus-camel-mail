@@ -1,5 +1,12 @@
 package de.turing85.camel.mail;
 
+import java.io.IOException;
+import java.util.List;
+
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+
 import com.icegreen.greenmail.util.GreenMail;
 import de.turing85.camel.mail.resource.GreenMailTestResource;
 import de.turing85.camel.mail.resource.InjectGreenMail;
@@ -7,14 +14,8 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
-import jakarta.mail.Message;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.util.List;
 
 import static com.google.common.truth.Truth.assertThat;
 import static io.restassured.RestAssured.given;

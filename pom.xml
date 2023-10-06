@@ -7,17 +7,22 @@
   <version>1.0.0-SNAPSHOT</version>
   <properties>
     <compiler-plugin.version>3.11.0</compiler-plugin.version>
-    <surefire-plugin.version>3.1.2</surefire-plugin.version>
-
-    <maven.compiler.release>17</maven.compiler.release>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
+    <formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
+    <impsort-maven-plugin.version>1.9.0</impsort-maven-plugin.version>
     <lombok.version>1.18.30</lombok.version>
+    <surefire-plugin.version>3.1.2</surefire-plugin.version>
 
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
     <quarkus.platform.version>3.4.2</quarkus.platform.version>
+
+    <formatter-maven-plugin.goal>format</formatter-maven-plugin.goal>
+    <formatter-maven-plugin.skip>false</formatter-maven-plugin.skip>
+    <impsort-maven-plugin.goal>sort</impsort-maven-plugin.goal>
+    <impsort-maven-plugin.skip>false</impsort-maven-plugin.skip>
+    <maven.compiler.release>17</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 
   <dependencyManagement>
@@ -96,6 +101,45 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>net.revelc.code.formatter</groupId>
+        <artifactId>formatter-maven-plugin</artifactId>
+        <version>${formatter-maven-plugin.version}</version>
+        <configuration>
+          <configFile>google-style.xml</configFile>
+          <lineEnding>LF</lineEnding>
+          <skip>${formatter-maven-plugin.skip}</skip>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>${formatter-maven-plugin.goal}</goal>
+            </goals>
+            <phase>validate</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>net.revelc.code</groupId>
+        <artifactId>impsort-maven-plugin</artifactId>
+        <version>${impsort-maven-plugin.version}</version>
+        <configuration>
+          <groups>java.,javax.,jakarta.,*</groups>
+          <lineEnding>LF</lineEnding>
+          <removeUnused>true</removeUnused>
+          <skip>${impsort-maven-plugin.skip}</skip>
+          <staticAfter>true</staticAfter>
+          <staticGroups>java,javax.,jakarta.,*</staticGroups>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>${impsort-maven-plugin.goal}</goal>
+            </goals>
+            <phase>validate</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>${quarkus.platform.group-id}</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>
         <version>${quarkus.platform.version}</version>
@@ -160,6 +204,18 @@
       </activation>
       <properties>
         <quarkus.package.type>native</quarkus.package.type>
+      </properties>
+    </profile>
+    <profile>
+      <id>skipFormat</id>
+      <activation>
+        <property>
+          <name>skipFormat</name>
+        </property>
+      </activation>
+      <properties>
+        <formatter-maven-plugin.skip>true</formatter-maven-plugin.skip>
+        <impsort-maven-plugin.skip>true</impsort-maven-plugin.skip>
       </properties>
     </profile>
   </profiles>
