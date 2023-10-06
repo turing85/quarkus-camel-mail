@@ -56,7 +56,7 @@ class MailSendRouteTest {
 
   @Test
   void testSendMailWithInvalidAddress() {
-        // @formatter:off
+    // @formatter:off
     given()
         .contentType(ContentType.TEXT)
         .body("foo@bar.baz broken")
