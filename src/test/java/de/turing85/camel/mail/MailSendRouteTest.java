@@ -1,15 +1,17 @@
 package de.turing85.camel.mail;
 
-import com.icegreen.greenmail.junit5.GreenMailExtension;
-import com.icegreen.greenmail.util.ServerSetupTest;
+import com.icegreen.greenmail.util.GreenMail;
+import de.turing85.camel.mail.resource.GreenMailTestResource;
+import de.turing85.camel.mail.resource.InjectGreenMail;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,10 +21,15 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
 
 @QuarkusTest
+@QuarkusTestResource(GreenMailTestResource.class)
 class MailSendRouteTest {
-  @RegisterExtension
-  public static final GreenMailExtension GREEN_MAIL =
-      new GreenMailExtension(ServerSetupTest.SMTP);
+  @InjectGreenMail
+  GreenMail greenMail;
+
+  @BeforeEach
+  void resetGreenMail() {
+    greenMail.reset();
+  }
 
   @Test
   void testSendMail() throws MessagingException, IOException {
@@ -37,7 +44,7 @@ class MailSendRouteTest {
         .statusCode(is(HttpResponseStatus.OK.code()))
         .body(is("Hello"));
     // @formatter:on
-    List<MimeMessage> messages = List.of(GREEN_MAIL.getReceivedMessages());
+    List<MimeMessage> messages = List.of(greenMail.getReceivedMessages());
     assertThat(messages).hasSize(1);
     MimeMessage message = messages.get(0);
     assertThat(message.getRecipients(Message.RecipientType.TO)).hasLength(1);
@@ -59,7 +66,7 @@ class MailSendRouteTest {
           .statusCode(is(HttpResponseStatus.INTERNAL_SERVER_ERROR.code()));
     // @formatter:on
 
-    List<MimeMessage> messages = List.of(GREEN_MAIL.getReceivedMessages());
+    List<MimeMessage> messages = List.of(greenMail.getReceivedMessages());
     assertThat(messages).hasSize(0);
   }
 }
