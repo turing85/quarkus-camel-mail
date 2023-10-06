@@ -1,2 +1,2 @@
 smtp:
-  host: "${SMTP_HOST}"
+  host: ${SMTP_HOST}
