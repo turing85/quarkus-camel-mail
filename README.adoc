@@ -1,6 +1,13 @@
 = Camel SMTP Bug
 
-== Start mail server
+== Building & test the application non-native
+.Building the application
+[source, bash]
+----
+./mvnw clean package
+----
+
+== Test the application non-native
 .Start mail server through `docker-compose.yml`
 [source, bash]
 ----
@@ -9,14 +16,6 @@ docker-compose \
   up --detach
 ----
 
-== Building the application non-native
-.Building the application
-[source, bash]
-----
-./mvnw clean package
-----
-
-== Test the application non-native
 .Start the application
 [source, bash]
 ----
@@ -43,115 +42,16 @@ Observe that everything works as expected
 ----
 
 == Start the application native
+.Start mail server through `docker-compose.yml`
+[source, bash]
+----
+docker-compose \
+  --file locald-deployment/docker-compose.yml \
+  up --detach
+----
+
 .Start the application
 [source, bash]
 ----
 target/camel-mail-1.0.0-SNAPSHOT-runner
 ----
-
-Observe that the application fails to start with the following stack-trace
-
-.Stack trace
-[source, bash]
-----
-__  ____  __  _____   ___  __ ____  ______
- --/ __ \/ / / / _ | / _ \/ //_/ / / / __/
- -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \
---\___\_\____/_/ |_/_/|_/_/|_|\____/___/
-2023-08-02 16:04:18,012 INFO  [org.apa.cam.qua.cor.CamelBootstrapRecorder] (main) Bootstrap runtime: org.apache.camel.quarkus.main.CamelMainRuntime
-2023-08-02 16:04:18,014 INFO  [org.apa.cam.mai.MainSupport] (main) Apache Camel (Main) 3.20.1 is starting
-2023-08-02 16:04:18,028 ERROR [org.apa.cam.qua.mai.CamelMainRuntime] (main) Failed to start application: org.apache.camel.FailedToCreateRouteException: Failed to create route route1 at: >>> SetProperty[receiver, simple{${body}}] <<< in route: Route(route1)[From[platform-http:///send?httpMethodRestrict=... because of java.lang.ClassNotFoundException: jakarta.mail.internet.AddressException
-	at org.apache.camel.reifier.RouteReifier.doCreateRoute(RouteReifier.java:215)
-	at org.apache.camel.reifier.RouteReifier.createRoute(RouteReifier.java:75)
-	at org.apache.camel.impl.DefaultModelReifierFactory.createRoute(DefaultModelReifierFactory.java:49)
-	at org.apache.camel.impl.DefaultCamelContext.startRouteDefinitions(DefaultCamelContext.java:937)
-	at org.apache.camel.impl.DefaultCamelContext.startRouteDefinitions(DefaultCamelContext.java:800)
-	at org.apache.camel.impl.engine.AbstractCamelContext.doInit(AbstractCamelContext.java:3008)
-	at org.apache.camel.quarkus.core.FastCamelContext.doInit(FastCamelContext.java:174)
-	at org.apache.camel.support.service.BaseService.init(BaseService.java:83)
-	at org.apache.camel.impl.engine.AbstractCamelContext.init(AbstractCamelContext.java:2679)
-	at org.apache.camel.support.service.BaseService.start(BaseService.java:111)
-	at org.apache.camel.impl.engine.AbstractCamelContext.start(AbstractCamelContext.java:2698)
-	at org.apache.camel.impl.DefaultCamelContext.start(DefaultCamelContext.java:262)
-	at org.apache.camel.quarkus.main.CamelMain.doStart(CamelMain.java:94)
-	at org.apache.camel.support.service.BaseService.start(BaseService.java:119)
-	at org.apache.camel.quarkus.main.CamelMain.startEngine(CamelMain.java:140)
-	at org.apache.camel.quarkus.main.CamelMainRuntime.start(CamelMainRuntime.java:49)
-	at org.apache.camel.quarkus.core.CamelBootstrapRecorder.start(CamelBootstrapRecorder.java:45)
-	at io.quarkus.deployment.steps.CamelBootstrapProcessor$boot173480958.deploy_0(Unknown Source)
-	at io.quarkus.deployment.steps.CamelBootstrapProcessor$boot173480958.deploy(Unknown Source)
-	at io.quarkus.runner.ApplicationImpl.doStart(Unknown Source)
-	at io.quarkus.runtime.Application.start(Application.java:101)
-	at io.quarkus.runtime.ApplicationLifecycleManager.run(ApplicationLifecycleManager.java:108)
-	at io.quarkus.runtime.Quarkus.run(Quarkus.java:71)
-	at io.quarkus.runtime.Quarkus.run(Quarkus.java:44)
-	at io.quarkus.runtime.Quarkus.run(Quarkus.java:124)
-	at io.quarkus.runner.GeneratedMain.main(Unknown Source)
-Caused by: org.apache.camel.RuntimeCamelException: java.lang.ClassNotFoundException: jakarta.mail.internet.AddressException
-	at org.apache.camel.reifier.errorhandler.ErrorHandlerReifier.createExceptionClasses(ErrorHandlerReifier.java:322)
-	at org.apache.camel.reifier.errorhandler.ErrorHandlerReifier.addExceptionPolicy(ErrorHandlerReifier.java:299)
-	at org.apache.camel.reifier.errorhandler.ErrorHandlerReifier.configure(ErrorHandlerReifier.java:342)
-	at org.apache.camel.reifier.errorhandler.DefaultErrorHandlerReifier.createErrorHandler(DefaultErrorHandlerReifier.java:62)
-	at org.apache.camel.impl.DefaultModelReifierFactory.createErrorHandler(DefaultModelReifierFactory.java:65)
-	at org.apache.camel.reifier.errorhandler.ErrorHandlerRefReifier.createErrorHandler(ErrorHandlerRefReifier.java:36)
-	at org.apache.camel.impl.DefaultModelReifierFactory.createErrorHandler(DefaultModelReifierFactory.java:65)
-	at org.apache.camel.reifier.ProcessorReifier.wrapInErrorHandler(ProcessorReifier.java:764)
-	at org.apache.camel.reifier.ProcessorReifier.wrapChannelInErrorHandler(ProcessorReifier.java:745)
-	at org.apache.camel.reifier.ProcessorReifier.wrapChannel(ProcessorReifier.java:724)
-	at org.apache.camel.reifier.ProcessorReifier.wrapChannel(ProcessorReifier.java:630)
-	at org.apache.camel.reifier.ProcessorReifier.wrapProcessor(ProcessorReifier.java:626)
-	at org.apache.camel.reifier.ProcessorReifier.makeProcessor(ProcessorReifier.java:873)
-	at org.apache.camel.reifier.ProcessorReifier.addRoutes(ProcessorReifier.java:598)
-	at org.apache.camel.reifier.RouteReifier.doCreateRoute(RouteReifier.java:211)
-	... 25 more
-Caused by: java.lang.ClassNotFoundException: jakarta.mail.internet.AddressException
-	at org.apache.camel.quarkus.core.CamelQuarkusClassResolver.resolveMandatoryClass(CamelQuarkusClassResolver.java:93)
-	at org.apache.camel.reifier.errorhandler.ErrorHandlerReifier.createExceptionClasses(ErrorHandlerReifier.java:319)
-	... 39 more
-
-2023-08-02 16:04:18,029 ERROR [io.qua.run.Application] (main) Failed to start application (with profile [prod]): java.lang.ClassNotFoundException: jakarta.mail.internet.AddressException
-	at org.apache.camel.quarkus.core.CamelQuarkusClassResolver.resolveMandatoryClass(CamelQuarkusClassResolver.java:93)
-	at org.apache.camel.reifier.errorhandler.ErrorHandlerReifier.createExceptionClasses(ErrorHandlerReifier.java:319)
-	at org.apache.camel.reifier.errorhandler.ErrorHandlerReifier.addExceptionPolicy(ErrorHandlerReifier.java:299)
-	at org.apache.camel.reifier.errorhandler.ErrorHandlerReifier.configure(ErrorHandlerReifier.java:342)
-	at org.apache.camel.reifier.errorhandler.DefaultErrorHandlerReifier.createErrorHandler(DefaultErrorHandlerReifier.java:62)
-	at org.apache.camel.impl.DefaultModelReifierFactory.createErrorHandler(DefaultModelReifierFactory.java:65)
-	at org.apache.camel.reifier.errorhandler.ErrorHandlerRefReifier.createErrorHandler(ErrorHandlerRefReifier.java:36)
-	at org.apache.camel.impl.DefaultModelReifierFactory.createErrorHandler(DefaultModelReifierFactory.java:65)
-	at org.apache.camel.reifier.ProcessorReifier.wrapInErrorHandler(ProcessorReifier.java:764)
-	at org.apache.camel.reifier.ProcessorReifier.wrapChannelInErrorHandler(ProcessorReifier.java:745)
-	at org.apache.camel.reifier.ProcessorReifier.wrapChannel(ProcessorReifier.java:724)
-	at org.apache.camel.reifier.ProcessorReifier.wrapChannel(ProcessorReifier.java:630)
-	at org.apache.camel.reifier.ProcessorReifier.wrapProcessor(ProcessorReifier.java:626)
-	at org.apache.camel.reifier.ProcessorReifier.makeProcessor(ProcessorReifier.java:873)
-	at org.apache.camel.reifier.ProcessorReifier.addRoutes(ProcessorReifier.java:598)
-	at org.apache.camel.reifier.RouteReifier.doCreateRoute(RouteReifier.java:211)
-	at org.apache.camel.reifier.RouteReifier.createRoute(RouteReifier.java:75)
-	at org.apache.camel.impl.DefaultModelReifierFactory.createRoute(DefaultModelReifierFactory.java:49)
-	at org.apache.camel.impl.DefaultCamelContext.startRouteDefinitions(DefaultCamelContext.java:937)
-	at org.apache.camel.impl.DefaultCamelContext.startRouteDefinitions(DefaultCamelContext.java:800)
-	at org.apache.camel.impl.engine.AbstractCamelContext.doInit(AbstractCamelContext.java:3008)
-	at org.apache.camel.quarkus.core.FastCamelContext.doInit(FastCamelContext.java:174)
-	at org.apache.camel.support.service.BaseService.init(BaseService.java:83)
-	at org.apache.camel.impl.engine.AbstractCamelContext.init(AbstractCamelContext.java:2679)
-	at org.apache.camel.support.service.BaseService.start(BaseService.java:111)
-	at org.apache.camel.impl.engine.AbstractCamelContext.start(AbstractCamelContext.java:2698)
-	at org.apache.camel.impl.DefaultCamelContext.start(DefaultCamelContext.java:262)
-	at org.apache.camel.quarkus.main.CamelMain.doStart(CamelMain.java:94)
-	at org.apache.camel.support.service.BaseService.start(BaseService.java:119)
-	at org.apache.camel.quarkus.main.CamelMain.startEngine(CamelMain.java:140)
-	at org.apache.camel.quarkus.main.CamelMainRuntime.start(CamelMainRuntime.java:49)
-	at org.apache.camel.quarkus.core.CamelBootstrapRecorder.start(CamelBootstrapRecorder.java:45)
-	at io.quarkus.deployment.steps.CamelBootstrapProcessor$boot173480958.deploy_0(Unknown Source)
-	at io.quarkus.deployment.steps.CamelBootstrapProcessor$boot173480958.deploy(Unknown Source)
-	at io.quarkus.runner.ApplicationImpl.doStart(Unknown Source)
-	at io.quarkus.runtime.Application.start(Application.java:101)
-	at io.quarkus.runtime.ApplicationLifecycleManager.run(ApplicationLifecycleManager.java:108)
-	at io.quarkus.runtime.Quarkus.run(Quarkus.java:71)
-	at io.quarkus.runtime.Quarkus.run(Quarkus.java:44)
-	at io.quarkus.runtime.Quarkus.run(Quarkus.java:124)
-	at io.quarkus.runner.GeneratedMain.main(Unknown Source)
-----
-
-== Workaround
-Uncomment lines 3 to 7 from link:src/main/java/de/turing85/camel/mail/ReflectionConfiguration.java[`src/main/java/de/turing85/camel/mail/ReflectionConfiguration.java`], re-build the application natively and re-run the test. Notice that everything works as expected.
