@@ -1,4 +1,4 @@
-= Camel SMTP Bug
+= Quarkus Camel SMTP
 
 == Building & test the application non-native
 .Building the application
