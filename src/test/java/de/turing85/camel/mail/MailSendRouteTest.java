@@ -51,7 +51,7 @@ class MailSendRouteTest {
               .statusCode(is(HttpResponseStatus.OK.code()))
               .body(is("mail sent"));
       // @formatter:on
-      final MimeMessage[] messages = greenMail.getReceivedMessages();
+      final MimeMessage[] messages = getGreenMail().getReceivedMessages();
       Truth.assertThat(messages).hasLength(1);
       final MimeMessage message = messages[0];
       Truth.assertThat(message.getRecipients(Message.RecipientType.TO)).hasLength(1);
@@ -75,8 +75,7 @@ class MailSendRouteTest {
               .statusCode(is(Response.Status.BAD_REQUEST.getStatusCode()))
               .body(is("address is malformed"));
       // @formatter:on
-
-      Truth.assertThat(greenMail.getReceivedMessages()).hasLength(0);
+      Truth.assertThat(getGreenMail().getReceivedMessages()).hasLength(0);
     }
 
     @Override
@@ -102,8 +101,7 @@ class MailSendRouteTest {
               .statusCode(is(Response.Status.BAD_REQUEST.getStatusCode()))
               .body(is("address is malformed"));
       // @formatter:on
-
-      Truth.assertThat(greenMail.getReceivedMessages()).hasLength(0);
+      Truth.assertThat(getGreenMail().getReceivedMessages()).hasLength(0);
     }
 
     @Test
