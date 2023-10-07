@@ -1,10 +1,10 @@
 = Quarkus Camel SMTP
 
-== Building & test the application non-native
+== Building the application non-native
 .Building the application
 [source, bash]
 ----
-./mvnw clean package
+./mvnw clean verify
 ----
 
 == Test the application non-native
@@ -32,13 +32,11 @@ curl \
   --data-raw 'foo@bar.baz'
 ----
 
-Observe that everything works as expected
-
 == Build the application native
 .Building the application
 [source, bash]
 ----
-./mvnw --define native clean package
+./mvnw --define native clean verify
 ----
 
 == Start the application native
