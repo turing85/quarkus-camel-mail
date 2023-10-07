@@ -1,7 +1,9 @@
 package de.turing85.camel.mail;
 
 import jakarta.mail.internet.AddressException;
+import jakarta.ws.rs.core.Response;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 
@@ -13,6 +15,10 @@ public class MailSendRoute extends RouteBuilder {
   public void configure() {
     // @formatter:off
     onException(AddressException.class)
+        .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(Response.Status.BAD_REQUEST.getStatusCode()))
+        .setBody(constant("address is malformed"))
+        .handled(true);
+    onException(Exception.class)
         .log(LoggingLevel.ERROR, "Ouchie: ${exception}")
         .handled(false);
 
@@ -26,6 +32,7 @@ public class MailSendRoute extends RouteBuilder {
         .setHeader("from", constant("foo@bar.baz"))
         .setBody(constant("Hello"))
         .to("smtp://{{smtp.host}}")
+        .setBody(constant("mail sent"))
         .log("Mail sent to ${header.to}");
     // @formatter:on
   }
