@@ -4,7 +4,8 @@
 .Building the application
 [source, bash]
 ----
-./mvnw clean verify
+./mvnw \
+  clean verify
 ----
 
 == Test the application non-native
@@ -12,14 +13,15 @@
 [source, bash]
 ----
 docker-compose \
-  --file locald-deployment/docker-compose.yml \
+  --file local-deployment/docker-compose.yml \
   up --detach
 ----
 
 .Start the application
 [source, bash]
 ----
-java -jar target/app/quarkus-run-jar
+SMTP_HOST=localhost:13025 \
+  java -jar target/quarkus-app/quarkus-run.jar
 ----
 
 .Send a test mail
@@ -36,7 +38,9 @@ curl \
 .Building the application
 [source, bash]
 ----
-./mvnw --define native clean verify
+./mvnw \
+  --define native \
+  clean verify
 ----
 
 == Start the application native
@@ -44,12 +48,33 @@ curl \
 [source, bash]
 ----
 docker-compose \
-  --file locald-deployment/docker-compose.yml \
+  --file local-deployment/docker-compose.yml \
   up --detach
 ----
 
 .Start the application
 [source, bash]
 ----
-target/camel-mail-1.0.0-SNAPSHOT-runner
+SMTP_HOST=localhost:13025 \
+  target/quarkus-camel-mail-1.0.0-SNAPSHOT-runner
+----
+
+.Send a test mail
+[source, bash]
+----
+curl \
+  --verbose \
+  --request POST 'http://localhost:8080/send' \
+  --header 'Content-Type: text/plain' \
+  --data-raw 'foo@bar.baz'
+----
+
+== Cleanup
+
+.Stop mail server through `docker-compose.yml`
+[source, bash]
+----
+docker-compose \
+  --file local-deployment/docker-compose.yml \
+  down
 ----
