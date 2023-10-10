@@ -3,6 +3,7 @@ package de.turing85.camel.mail;
 import jakarta.mail.internet.AddressException;
 import jakarta.ws.rs.core.Response;
 
+import org.apache.camel.AggregationStrategy;
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
@@ -13,9 +14,12 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.platformH
 @SuppressWarnings("unused")
 public class MailSendRoute extends RouteBuilder {
   public static final String SEND_MAIL_ROUTE_ID = "send-mail";
+  public static final AggregationStrategy NOOP_AGGREATION_STRATEGY =
+      (Exchange original, Exchange resource) -> original;
 
   @Override
   public void configure() {
+    // @formatter:off
     onException(AddressException.class)
         .setHeader(
             Exchange.HTTP_RESPONSE_CODE,
@@ -26,11 +30,10 @@ public class MailSendRoute extends RouteBuilder {
         .log(LoggingLevel.ERROR, "Ouchie: ${exception}")
         .handled(false);
 
-    // @formatter:off
     from(platformHttp("/send").httpMethodRestrict("POST"))
         .id("http-to-mail")
         .multicast()
-            .aggregationStrategy((Exchange original, Exchange resource) -> original)
+            .aggregationStrategy(NOOP_AGGREATION_STRATEGY)
             .stopOnException()
             .synchronous()
             .to(direct(SEND_MAIL_ROUTE_ID))
@@ -41,15 +44,15 @@ public class MailSendRoute extends RouteBuilder {
         .id(SEND_MAIL_ROUTE_ID)
         .doTry()
             .setHeader("from", constant("foo@bar.baz"))
-            .setHeader("subject", constant("important"))
             .setHeader("to", bodyAs(String.class))
+            .setHeader("subject", constant("important"))
             .setBody(constant("Hello"))
             .log("Sending mail to ${header.to}")
             .to("smtp://{{smtp.host}}")
             .log("Mail sent to ${header.to}")
         .doFinally()
-            .removeHeader("to")
             .removeHeader("subject")
+            .removeHeader("to")
             .removeHeader("from");
     // @formatter:on
   }
