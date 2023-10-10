@@ -4,6 +4,6 @@ import io.quarkus.test.junit.QuarkusIntegrationTest;
 import org.junit.jupiter.api.DisplayName;
 
 @QuarkusIntegrationTest
-@DisplayName("IT: Test sending mails")
+@DisplayName("IT: Sending mails")
 class MailSendRouteIT extends MailSendRouteTest {
 }

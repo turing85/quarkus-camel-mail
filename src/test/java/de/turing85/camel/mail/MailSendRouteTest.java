@@ -23,12 +23,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 
 @QuarkusTest
 @QuarkusTestResource(GreenMailTestResource.class)
 @Getter
-@DisplayName("Sending mails")
+@DisplayName("Test: Sending mails")
 class MailSendRouteTest {
   @InjectGreenMail
   GreenMail greenMail;
@@ -49,11 +50,16 @@ class MailSendRouteTest {
               .post("/send")
           .then()
               .statusCode(is(HttpResponseStatus.OK.code()))
+              .header("from", is(nullValue()))
+              .header("to", is(nullValue()))
+              .header("subject", is(nullValue()))
               .body(is("mail sent"));
       // @formatter:on
       final MimeMessage[] messages = getGreenMail().getReceivedMessages();
       Truth.assertThat(messages).hasLength(1);
       final MimeMessage message = messages[0];
+      Truth.assertThat(message.getFrom()).hasLength(1);
+      Truth.assertThat(message.getFrom()[0].toString()).isEqualTo("foo@bar.baz");
       Truth.assertThat(message.getRecipients(Message.RecipientType.TO)).hasLength(1);
       Truth.assertThat(message.getRecipients(Message.RecipientType.TO)[0].toString())
           .isEqualTo(expectedRecipient);
@@ -73,6 +79,9 @@ class MailSendRouteTest {
               .post("/send")
           .then()
               .statusCode(is(Response.Status.BAD_REQUEST.getStatusCode()))
+              .header("from", is(nullValue()))
+              .header("to", is(nullValue()))
+              .header("subject", is(nullValue()))
               .body(is("address is malformed"));
       // @formatter:on
       Truth.assertThat(getGreenMail().getReceivedMessages()).hasLength(0);
@@ -99,6 +108,9 @@ class MailSendRouteTest {
               .post("/send")
           .then()
               .statusCode(is(Response.Status.BAD_REQUEST.getStatusCode()))
+              .header("from", is(nullValue()))
+              .header("to", is(nullValue()))
+              .header("subject", is(nullValue()))
               .body(is("address is malformed"));
       // @formatter:on
       Truth.assertThat(getGreenMail().getReceivedMessages()).hasLength(0);
@@ -115,7 +127,10 @@ class MailSendRouteTest {
           .when()
               .post("/send")
           .then()
-             .statusCode(is(HttpResponseStatus.INTERNAL_SERVER_ERROR.code()));
+              .statusCode(is(HttpResponseStatus.INTERNAL_SERVER_ERROR.code()))
+              .header("from", is(nullValue()))
+              .header("to", is(nullValue()))
+              .header("subject", is(nullValue()));
       // @formatter:on
     }
 

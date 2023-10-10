@@ -1,5 +1,9 @@
+quarkus:
+  http:
+    test-port: 0
 smtp:
   host: ${SMTP_HOST}
+---
 '%dev':
   quarkus:
     log:
@@ -7,6 +11,7 @@ smtp:
         json: false
   smtp:
     host: localhost:13025
+---
 '%test':
   quarkus:
     log:
