@@ -1,14 +1,14 @@
 = Quarkus Camel SMTP
 
-== Building the application non-native
-.Building the application
+== Building the application, non-native
+.Building and test the application
 [source, bash]
 ----
 ./mvnw \
   clean verify
 ----
 
-== Test the application non-native
+== Test the application manually, non-native
 .Start mail server through `docker-compose.yml`
 [source, bash]
 ----
@@ -34,8 +34,8 @@ curl \
   --data-raw 'foo@bar.baz'
 ----
 
-== Build the application native
-.Building the application
+== Build the application, native
+.Building and test the application
 [source, bash]
 ----
 ./mvnw \
@@ -43,7 +43,7 @@ curl \
   clean verify
 ----
 
-== Start the application native
+== Test the application manually, native
 .Start mail server through `docker-compose.yml`
 [source, bash]
 ----
