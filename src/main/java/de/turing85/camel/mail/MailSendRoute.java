@@ -25,14 +25,15 @@ public class MailSendRoute extends RouteBuilder {
     onException(Exception.class)
         .log(LoggingLevel.ERROR, "Ouchie: ${exception}")
         .handled(false);
+
     // @formatter:off
     from(platformHttp("/send").httpMethodRestrict("POST"))
         .id("http-to-mail")
         .multicast()
-          .aggregationStrategy((Exchange original, Exchange resource) -> original)
-          .stopOnException()
-          .synchronous()
-          .to(direct(SEND_MAIL_ROUTE_ID))
+            .aggregationStrategy((Exchange original, Exchange resource) -> original)
+            .stopOnException()
+            .synchronous()
+            .to(direct(SEND_MAIL_ROUTE_ID))
         .end()
         .setBody(constant("mail sent"));
 
