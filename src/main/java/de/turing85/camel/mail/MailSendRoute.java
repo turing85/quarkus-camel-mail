@@ -14,8 +14,9 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.platformH
 
 @SuppressWarnings("unused")
 public class MailSendRoute extends RouteBuilder {
+  public static final String HTTP_ENDPOINT = "/send";
   public static final String SEND_MAIL_ROUTE_ID = "send-mail";
-  public static final AggregationStrategy NOOP_AGGREGATION_STRATEGY =
+  private static final AggregationStrategy NOOP_AGGREGATION_STRATEGY =
       (Exchange original, Exchange resource) -> original;
 
   @Override
@@ -26,13 +27,14 @@ public class MailSendRoute extends RouteBuilder {
             Exchange.HTTP_RESPONSE_CODE,
             constant(Response.Status.BAD_REQUEST.getStatusCode()))
         .setHeader(Exchange.CONTENT_TYPE, constant(MediaType.TEXT_PLAIN))
-        .setBody(constant("address is malformed"))
+        .log("Bad request")
+        .setBody(constant("Address is malformed"))
         .handled(true);
     onException(Exception.class)
         .log(LoggingLevel.ERROR, "Ouchie: ${exception}")
         .handled(false);
 
-    from(platformHttp("/send").httpMethodRestrict("POST"))
+    from(platformHttp(HTTP_ENDPOINT).httpMethodRestrict("POST"))
         .id("http-to-mail")
         .multicast()
             .aggregationStrategy(NOOP_AGGREGATION_STRATEGY)

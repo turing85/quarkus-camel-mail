@@ -48,7 +48,7 @@ class MailSendRouteTest {
               .contentType(MediaType.TEXT_PLAIN)
               .body(expectedRecipient)
           .when()
-              .post("/send")
+              .post(MailSendRoute.HTTP_ENDPOINT)
           .then()
               .statusCode(is(HttpResponseStatus.OK.code()))
               .contentType(MediaType.TEXT_PLAIN)
@@ -78,14 +78,14 @@ class MailSendRouteTest {
               .contentType(MediaType.TEXT_PLAIN)
               .body("foo@bar.baz broken")
           .when()
-              .post("/send")
+              .post(MailSendRoute.HTTP_ENDPOINT)
           .then()
               .statusCode(is(Response.Status.BAD_REQUEST.getStatusCode()))
               .contentType(MediaType.TEXT_PLAIN)
               .header("from", is(nullValue()))
               .header("to", is(nullValue()))
               .header("subject", is(nullValue()))
-              .body(is("address is malformed"));
+              .body(is("Address is malformed"));
       // @formatter:on
       Truth.assertThat(getGreenMail().getReceivedMessages()).hasLength(0);
     }
@@ -108,14 +108,14 @@ class MailSendRouteTest {
               .contentType(MediaType.TEXT_PLAIN)
               .body("foo@bar.baz broken")
           .when()
-              .post("/send")
+              .post(MailSendRoute.HTTP_ENDPOINT)
           .then()
               .statusCode(is(Response.Status.BAD_REQUEST.getStatusCode()))
               .contentType(MediaType.TEXT_PLAIN)
               .header("from", is(nullValue()))
               .header("to", is(nullValue()))
               .header("subject", is(nullValue()))
-              .body(is("address is malformed"));
+              .body(is("Address is malformed"));
       // @formatter:on
       Truth.assertThat(getGreenMail().getReceivedMessages()).hasLength(0);
     }
@@ -129,7 +129,7 @@ class MailSendRouteTest {
               .contentType(MediaType.TEXT_PLAIN)
               .body("foo@bar.baz")
           .when()
-              .post("/send")
+              .post(MailSendRoute.HTTP_ENDPOINT)
           .then()
               .statusCode(is(HttpResponseStatus.INTERNAL_SERVER_ERROR.code()))
               .contentType(MediaType.TEXT_PLAIN)
