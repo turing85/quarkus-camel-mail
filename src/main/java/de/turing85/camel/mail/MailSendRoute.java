@@ -1,6 +1,7 @@
 package de.turing85.camel.mail;
 
 import jakarta.mail.internet.AddressException;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import org.apache.camel.AggregationStrategy;
@@ -14,7 +15,7 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.platformH
 @SuppressWarnings("unused")
 public class MailSendRoute extends RouteBuilder {
   public static final String SEND_MAIL_ROUTE_ID = "send-mail";
-  public static final AggregationStrategy NOOP_AGGREATION_STRATEGY =
+  public static final AggregationStrategy NOOP_AGGREGATION_STRATEGY =
       (Exchange original, Exchange resource) -> original;
 
   @Override
@@ -24,6 +25,7 @@ public class MailSendRoute extends RouteBuilder {
         .setHeader(
             Exchange.HTTP_RESPONSE_CODE,
             constant(Response.Status.BAD_REQUEST.getStatusCode()))
+        .setHeader(Exchange.CONTENT_TYPE, constant(MediaType.TEXT_PLAIN))
         .setBody(constant("address is malformed"))
         .handled(true);
     onException(Exception.class)
@@ -33,11 +35,13 @@ public class MailSendRoute extends RouteBuilder {
     from(platformHttp("/send").httpMethodRestrict("POST"))
         .id("http-to-mail")
         .multicast()
-            .aggregationStrategy(NOOP_AGGREATION_STRATEGY)
+            .aggregationStrategy(NOOP_AGGREGATION_STRATEGY)
             .stopOnException()
             .synchronous()
             .to(direct(SEND_MAIL_ROUTE_ID))
         .end()
+        .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(Response.Status.OK.getStatusCode()))
+        .setHeader(Exchange.CONTENT_TYPE, constant(MediaType.TEXT_PLAIN))
         .setBody(constant("mail sent"));
 
     from(direct(SEND_MAIL_ROUTE_ID))

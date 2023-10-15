@@ -5,6 +5,7 @@ import java.io.IOException;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import com.google.common.truth.Truth;
@@ -17,12 +18,12 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import lombok.Getter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 
@@ -44,12 +45,13 @@ class MailSendRouteTest {
       // @formatter:off
       RestAssured
           .given()
-              .contentType(ContentType.TEXT)
+              .contentType(MediaType.TEXT_PLAIN)
               .body(expectedRecipient)
           .when()
               .post("/send")
           .then()
               .statusCode(is(HttpResponseStatus.OK.code()))
+              .contentType(MediaType.TEXT_PLAIN)
               .header("from", is(nullValue()))
               .header("to", is(nullValue()))
               .header("subject", is(nullValue()))
@@ -73,12 +75,13 @@ class MailSendRouteTest {
       // @formatter:off
       RestAssured
           .given()
-              .contentType(ContentType.TEXT)
+              .contentType(MediaType.TEXT_PLAIN)
               .body("foo@bar.baz broken")
           .when()
               .post("/send")
           .then()
               .statusCode(is(Response.Status.BAD_REQUEST.getStatusCode()))
+              .contentType(MediaType.TEXT_PLAIN)
               .header("from", is(nullValue()))
               .header("to", is(nullValue()))
               .header("subject", is(nullValue()))
@@ -102,12 +105,13 @@ class MailSendRouteTest {
       // @formatter:off
       RestAssured
           .given()
-              .contentType(ContentType.TEXT)
+              .contentType(MediaType.TEXT_PLAIN)
               .body("foo@bar.baz broken")
           .when()
               .post("/send")
           .then()
               .statusCode(is(Response.Status.BAD_REQUEST.getStatusCode()))
+              .contentType(MediaType.TEXT_PLAIN)
               .header("from", is(nullValue()))
               .header("to", is(nullValue()))
               .header("subject", is(nullValue()))
@@ -122,15 +126,17 @@ class MailSendRouteTest {
       // @formatter:off
       RestAssured
           .given()
-              .contentType(ContentType.TEXT)
+              .contentType(MediaType.TEXT_PLAIN)
               .body("foo@bar.baz")
           .when()
               .post("/send")
           .then()
               .statusCode(is(HttpResponseStatus.INTERNAL_SERVER_ERROR.code()))
+              .contentType(MediaType.TEXT_PLAIN)
               .header("from", is(nullValue()))
               .header("to", is(nullValue()))
-              .header("subject", is(nullValue()));
+              .header("subject", is(nullValue()))
+              .body(is(emptyString()));
       // @formatter:on
     }
 
