@@ -23,7 +23,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 
@@ -136,7 +135,7 @@ class MailSendRouteTest {
               .header("from", is(nullValue()))
               .header("to", is(nullValue()))
               .header("subject", is(nullValue()))
-              .body(is(emptyString()));
+              .body(is("ISE"));
       // @formatter:on
     }
 

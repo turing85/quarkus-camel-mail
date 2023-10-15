@@ -22,26 +22,28 @@ public class MailSendRoute extends RouteBuilder {
   @Override
   public void configure() {
     // @formatter:off
-    onException(AddressException.class)
-        .setHeader(
-            Exchange.HTTP_RESPONSE_CODE,
-            constant(Response.Status.BAD_REQUEST.getStatusCode()))
-        .setHeader(Exchange.CONTENT_TYPE, constant(MediaType.TEXT_PLAIN))
-        .log("Bad request")
-        .setBody(constant("Address is malformed"))
-        .handled(true);
-    onException(Exception.class)
-        .log(LoggingLevel.ERROR, "Ouchie: ${exception}")
-        .handled(false);
-
     from(platformHttp(HTTP_ENDPOINT).httpMethodRestrict("POST"))
         .id("http-to-mail")
-        .multicast()
-            .aggregationStrategy(NOOP_AGGREGATION_STRATEGY)
-            .stopOnException()
-            .synchronous()
-            .to(direct(SEND_MAIL_ROUTE_ID))
+        .onException(AddressException.class)
+            .log("Bad request")
+            .setHeader(
+                Exchange.HTTP_RESPONSE_CODE,
+                constant(Response.Status.BAD_REQUEST.getStatusCode()))
+            .setHeader(Exchange.CONTENT_TYPE, constant(MediaType.TEXT_PLAIN))
+            .setBody(constant("Address is malformed"))
+            .logStackTrace(true)
+            .handled(true)
         .end()
+        .onException(Exception.class)
+            .log(LoggingLevel.ERROR, "${exception.stacktrace}")
+            .setHeader(
+                Exchange.HTTP_RESPONSE_CODE,
+                constant(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()))
+            .setHeader(Exchange.CONTENT_TYPE, constant(MediaType.TEXT_PLAIN))
+            .setBody(constant("ISE"))
+            .handled(true)
+        .end()
+        .to(direct(SEND_MAIL_ROUTE_ID))
         .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(Response.Status.OK.getStatusCode()))
         .setHeader(Exchange.CONTENT_TYPE, constant(MediaType.TEXT_PLAIN))
         .setBody(constant("mail sent"));
@@ -57,9 +59,7 @@ public class MailSendRoute extends RouteBuilder {
             .to("smtp://{{smtp.host}}")
             .log("Mail sent to ${header.to}")
         .doFinally()
-            .removeHeader("subject")
-            .removeHeader("to")
-            .removeHeader("from");
+            .removeHeaders("from|to|subject");
     // @formatter:on
   }
 }
