@@ -14,13 +14,13 @@
 
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>3.2.6.Final</quarkus.platform.version>
+    <quarkus.platform.version>3.9.1</quarkus.platform.version>
 
     <formatter-maven-plugin.goal>format</formatter-maven-plugin.goal>
     <formatter-maven-plugin.skip>false</formatter-maven-plugin.skip>
     <impsort-maven-plugin.goal>sort</impsort-maven-plugin.goal>
     <impsort-maven-plugin.skip>false</impsort-maven-plugin.skip>
-    <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -50,6 +50,7 @@
         <artifactId>impsort-maven-plugin</artifactId>
         <version>${impsort-maven-plugin.version}</version>
         <configuration>
+          <compliance>17</compliance>
           <groups>java.,javax.,jakarta.,*</groups>
           <lineEnding>LF</lineEnding>
           <removeUnused>true</removeUnused>

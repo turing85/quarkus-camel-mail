@@ -32,6 +32,9 @@ import static org.hamcrest.core.Is.is;
 @DisplayName("Test: Sending mails")
 class MailSendRouteTest {
   @InjectGreenMail
+  int smtpPort;
+
+  @InjectGreenMail
   GreenMail greenMail;
 
   @Nested
@@ -90,6 +93,11 @@ class MailSendRouteTest {
     }
 
     @Override
+    public int getSmtpPort() {
+      return MailSendRouteTest.this.getSmtpPort();
+    }
+
+    @Override
     public GreenMail getGreenMail() {
       return MailSendRouteTest.this.getGreenMail();
     }
@@ -137,6 +145,11 @@ class MailSendRouteTest {
               .header("subject", is(nullValue()))
               .body(is("ISE"));
       // @formatter:on
+    }
+
+    @Override
+    public int getSmtpPort() {
+      return MailSendRouteTest.this.getSmtpPort();
     }
 
     @Override

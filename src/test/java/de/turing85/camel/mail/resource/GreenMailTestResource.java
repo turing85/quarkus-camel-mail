@@ -16,7 +16,7 @@ public class GreenMailTestResource implements QuarkusTestResourceLifecycleManage
 
   @Override
   public Map<String, String> start() {
-    log.info("Starting smtp server on port {}", smtpPort);
+    log.debug("Starting smtp server on port {}", smtpPort);
     greenMail.start();
     return Map.of("smtp.host", "localhost:%d".formatted(smtpPort));
   }
@@ -25,10 +25,13 @@ public class GreenMailTestResource implements QuarkusTestResourceLifecycleManage
   public void inject(TestInjector testInjector) {
     testInjector.injectIntoFields(greenMail,
         new TestInjector.AnnotatedAndMatchesType(InjectGreenMail.class, GreenMail.class));
+    testInjector.injectIntoFields(smtpPort,
+        new TestInjector.AnnotatedAndMatchesType(InjectGreenMail.class, int.class));
   }
 
   @Override
   public void stop() {
+    log.debug("Stopping smtp server on port {}", smtpPort);
     greenMail.stop();
   }
 }
